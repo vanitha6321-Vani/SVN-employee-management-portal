@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SVN Electrical Works</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f172a, #2563eb);
+        }
+
+        .welcome-box {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 45px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .welcome-box h1 {
+            color: #1e3a8a;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-box p {
+            color: #64748b;
+            font-size: 17px;
+            margin-bottom: 30px;
+        }
+
+        .start-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .start-btn:hover {
+            background: #1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="welcome-box">
+
+        <h1>WELCOME TO<br>SVN ELECTRICAL WORKS</h1>
+
+        <p>
+            Employee Management System
+        </p>
+
+        <button
+            class="start-btn"
+            onclick="startApp()"
+        >
+            Get Started
+        </button>
+
+    </div>
+
+
+    <script>
+
+        function startApp() {
+
+            window.location.href = "dashboard.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

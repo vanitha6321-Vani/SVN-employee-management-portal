@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SVN Electrical Works - Employee Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+        <h2>
+            SVN Electrical<br>
+            Works
+        </h2>
+
+        <button onclick="showSection('dashboard')">
+            📊 Dashboard
+        </button>
+
+        <button onclick="showSection('employees')">
+            👥 Employees
+        </button>
+
+        <button onclick="showSection('attendance')">
+            📅 Attendance
+        </button>
+
+        <button onclick="showSection('leave')">
+            🏖️ Leave
+        </button>
+
+        <button onclick="showSection('salary')">
+            💰 Salary
+        </button>
+
+        <button onclick="showSection('reports')">
+            📄 Reports
+        </button>
+
+        <button onclick="showSection('settings')">
+            ⚙️ Account Settings
+        </button>
+
+        <button onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <header>
+
+            <h1 id="pageTitle">
+                Dashboard
+            </h1>
+
+            <span id="welcomeUser">
+                Welcome, Admin 👋
+            </span>
+
+        </header>
+
+
+        <!-- =================================================
+             DASHBOARD
+        ================================================== -->
+
+        <section id="dashboard" class="section">
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>
+                        Total Employees
+                    </h3>
+
+                    <p id="totalEmployees">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Present Today
+                    </h3>
+
+                    <p id="dashboardPresent">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        On Leave
+                    </h3>
+
+                    <p id="dashboardLeave">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Departments
+                    </h3>
+
+                    <p id="totalDepartments">
+                        0
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EMPLOYEES
+        ================================================== -->
+
+        <section id="employees" class="section hidden">
+
+            <div class="section-header">
+
+                <h2>
+                    👥 Employees
+                </h2>
+
+                <button
+                    class="add-btn"
+                    onclick="openEmployeeForm()">
+
+                    + Add Employee
+
+                </button>
+
+            </div>
+
+
+            <!-- EMPLOYEE FORM -->
+
+            <div
+                id="employeeForm"
+                class="employee-form hidden">
+
+                <h2>
+                    Add New Employee
+                </h2>
+
+
+                <form id="addEmployeeForm">
+
+                    <div class="form-grid">
+
+
+                        <!-- Employee ID -->
+
+                        <div>
+
+                            <label>
+                                Employee ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="employeeId"
+                                placeholder="EMP001"
+                                required>
+
+                        </div>
+
+
+                        <!-- Name -->
+
+                        <div>
+
+                            <label>
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="employeeName"
+                                placeholder="Enter employee name"
+                                required>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div>
+
+                            <label>
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="employeeEmail"
+                                placeholder="employee@gmail.com"
+                                required>
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div>
+
+                            <label>
+                                Phone Number
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="employeePhone"
+                                placeholder="9876543210"
+                                required>
+
+                        </div>
+
+
+                        <!-- Department -->
+
+                        <div>
+
+                            <label>
+                                Department
+                            </label>
+
+                            <select
+                                id="employeeDepartment"
+                                required>
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                                <option value="Electrical">
+                                    Electrical
+                                </option>
+
+                                <option value="IT">
+                                    IT
+                                </option>
+
+                                <option value="HR">
+                                    HR
+                                </option>
+
+                                <option value="Finance">
+                                    Finance
+                                </option>
+
+                                <option value="Marketing">
+                                    Marketing
+                                </option>
+
+                                <option value="Sales">
+                                    Sales
+                                </option>
+
+                                <option value="Operations">
+                                    Operations
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Designation -->
+
+                        <div>
+
+                            <label>
+                                Designation
+                            </label>
+
+                            <input
+                                type="text"
+                                id="employeeDesignation"
+                                placeholder="Electrical Engineer"
+                                required>
+
+                        </div>
+
+
+                        <!-- Joining Date -->
+
+                        <div>
+
+                            <label>
+                                Date of Joining
+                            </label>
+
+                            <input
+                                type="date"
+                                id="joiningDate"
+                                required>
+
+                        </div>
+
+
+                        <!-- Salary -->
+
+                        <div>
+
+                            <label>
+                                Salary
+                            </label>
+
+                            <input
+                                type="number"
+                                id="employeeSalary"
+                                placeholder="25000"
+                                min="0"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="submit"
+                            class="save-btn">
+
+                            Save Employee
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="closeEmployeeForm()">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- EMPLOYEE TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Department</th>
+
+                            <th>Designation</th>
+
+                            <th>Phone</th>
+
+                            <th>Salary</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="employeeTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ATTENDANCE
+        ================================================== -->
+
+        <section
+            id="attendance"
+            class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        📅 Attendance Management
+                    </h2>
+
+                    <p id="attendanceDate"></p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div class="attendance-summary">
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Present
+                    </h3>
+
+                    <p id="presentCount">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Absent
+                    </h3>
+
+                    <p id="absentCount">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Late
+                    </h3>
+
+                    <p id="lateCount">
+                        0
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Employee ID
+                            </th>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="attendanceTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LEAVE MANAGEMENT
+        ================================================== -->
+
+        <section
+            id="leave"
+            class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        🏖️ Leave Management
+                    </h2>
+
+                    <p>
+                        Manage employee leave requests
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="add-btn"
+                    onclick="openLeaveForm()">
+
+                    + Apply Leave
+
+                </button>
+
+            </div>
+
+
+            <!-- LEAVE FORM -->
+
+            <div
+                id="leaveForm"
+                class="employee-form hidden">
+
+                <h2>
+                    Apply Leave
+                </h2>
+
+
+                <form id="addLeaveForm">
+
+                    <div class="form-grid">
+
+
+                        <!-- Employee -->
+
+                        <div>
+
+                            <label>
+                                Employee
+                            </label>
+
+                            <select
+                                id="leaveEmployee"
+                                required>
+
+                                <option value="">
+                                    Select Employee
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Leave Type -->
+
+                        <div>
+
+                            <label>
+                                Leave Type
+                            </label>
+
+                            <select
+                                id="leaveType"
+                                required>
+
+                                <option value="">
+                                    Select Leave Type
+                                </option>
+
+                                <option value="Casual Leave">
+                                    Casual Leave
+                                </option>
+
+                                <option value="Sick Leave">
+                                    Sick Leave
+                                </option>
+
+                                <option value="Emergency Leave">
+                                    Emergency Leave
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- From -->
+
+                        <div>
+
+                            <label>
+                                From Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="leaveFrom"
+                                required>
+
+                        </div>
+
+
+                        <!-- To -->
+
+                        <div>
+
+                            <label>
+                                To Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="leaveTo"
+                                required>
+
+                        </div>
+
+
+                        <!-- Reason -->
+
+                        <div>
+
+                            <label>
+                                Reason
+                            </label>
+
+                            <input
+                                type="text"
+                                id="leaveReason"
+                                placeholder="Enter reason"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="submit"
+                            class="save-btn">
+
+                            Submit Leave
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="closeLeaveForm()">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- LEAVE SUMMARY -->
+
+            <div class="attendance-summary">
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Pending
+                    </h3>
+
+                    <p id="pendingLeave">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Approved
+                    </h3>
+
+                    <p id="approvedLeave">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="attendance-card">
+
+                    <h3>
+                        Rejected
+                    </h3>
+
+                    <p id="rejectedLeave">
+                        0
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- LEAVE TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Employee</th>
+
+                            <th>Leave Type</th>
+
+                            <th>From</th>
+
+                            <th>To</th>
+
+                            <th>Reason</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="leaveTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SALARY MANAGEMENT
+        ================================================== -->
+
+        <section
+            id="salary"
+            class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        💰 Salary Management
+                    </h2>
+
+                    <p>
+                        Manage employee salaries and payroll
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="add-btn"
+                    onclick="openSalaryForm()">
+
+                    + Add Salary
+
+                </button>
+
+            </div>
+
+
+            <!-- SALARY SUMMARY -->
+
+            <div class="cards">
+
+
+                <div class="card">
+
+                    <h3>
+                        Employees Paid
+                    </h3>
+
+                    <p id="employeesPaid">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Total Salary
+                    </h3>
+
+                    <p id="totalSalary">
+                        ₹0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Total Allowances
+                    </h3>
+
+                    <p id="totalAllowances">
+                        ₹0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Total Deductions
+                    </h3>
+
+                    <p id="totalDeductions">
+                        ₹0
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SALARY FORM -->
+
+            <div
+                id="salaryForm"
+                class="employee-form hidden">
+
+                <h2>
+                    Add Employee Salary
+                </h2>
+
+
+                <form id="addSalaryForm">
+
+                    <div class="form-grid">
+
+
+                        <div>
+
+                            <label>
+                                Employee
+                            </label>
+
+                            <select
+                                id="salaryEmployee"
+                                required>
+
+                                <option value="">
+                                    Select Employee
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Month
+                            </label>
+
+                            <input
+                                type="month"
+                                id="salaryMonth"
+                                required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Basic Salary
+                            </label>
+
+                            <input
+                                type="number"
+                                id="basicSalary"
+                                placeholder="25000"
+                                min="0"
+                                required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Allowances
+                            </label>
+
+                            <input
+                                type="number"
+                                id="allowances"
+                                placeholder="5000"
+                                value="0"
+                                min="0"
+                                required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Deductions
+                            </label>
+
+                            <input
+                                type="number"
+                                id="deductions"
+                                placeholder="2000"
+                                value="0"
+                                min="0"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="submit"
+                            class="save-btn">
+
+                            Save Salary
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="closeSalaryForm()">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- SALARY TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Employee ID</th>
+
+                            <th>Employee Name</th>
+
+                            <th>Month</th>
+
+                            <th>Basic Salary</th>
+
+                            <th>Allowances</th>
+
+                            <th>Deductions</th>
+
+                            <th>Net Salary</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="salaryTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REPORT MANAGEMENT
+        ================================================== -->
+
+        <section
+            id="reports"
+            class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        📊 Report Management
+                    </h2>
+
+                    <p>
+                        View and print employee management reports
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- REPORT SUMMARY -->
+
+            <div class="cards">
+
+
+                <div class="card">
+
+                    <h3>
+                        Total Employees
+                    </h3>
+
+                    <p id="reportEmployees">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Present Today
+                    </h3>
+
+                    <p id="reportPresent">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Approved Leaves
+                    </h3>
+
+                    <p id="reportLeaves">
+                        0
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Total Salary
+                    </h3>
+
+                    <p id="reportSalary">
+                        ₹0
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- REPORT BUTTONS -->
+
+            <div class="report-buttons">
+
+                <button
+                    class="add-btn"
+                    onclick="generateEmployeeReport()">
+
+                    👥 Employee Report
+
+                </button>
+
+
+                <button
+                    class="add-btn"
+                    onclick="generateAttendanceReport()">
+
+                    📅 Attendance Report
+
+                </button>
+
+
+                <button
+                    class="add-btn"
+                    onclick="generateLeaveReport()">
+
+                    🏖️ Leave Report
+
+                </button>
+
+
+                <button
+                    class="add-btn"
+                    onclick="generateSalaryReport()">
+
+                    💰 Salary Report
+
+                </button>
+
+            </div>
+
+
+            <!-- REPORT OUTPUT -->
+
+            <div
+                id="reportOutput"
+                class="table-container">
+
+                <h2>
+                    Report
+                </h2>
+
+                <p>
+                    Select a report above to view details.
+                </p>
+
+            </div>
+
+
+            <!-- PRINT -->
+
+            <div class="form-buttons">
+
+                <button
+                    type="button"
+                    class="save-btn"
+                    onclick="printReport()">
+
+                    🖨️ Print Report
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACCOUNT SETTINGS
+        ================================================== -->
+
+        <section
+            id="settings"
+            class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        ⚙️ Account Settings
+                    </h2>
+
+                    <p>
+                        Change your username and password
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="employee-form settings-box">
+
+                <h2>
+                    🔐 Login Details
+                </h2>
+
+
+                <form id="settingsForm">
+
+                    <div class="form-grid">
+
+
+                        <!-- CURRENT USERNAME -->
+
+                        <div>
+
+                            <label>
+                                Current Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="currentUsername"
+                                placeholder="Enter current username"
+                                required>
+
+                        </div>
+
+
+                        <!-- NEW USERNAME -->
+
+                        <div>
+
+                            <label>
+                                New Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="newUsername"
+                                placeholder="Enter new username"
+                                required>
+
+                        </div>
+
+
+                        <!-- CURRENT PASSWORD -->
+
+                        <div>
+
+                            <label>
+                                Current Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                placeholder="Enter current password"
+                                required>
+
+                        </div>
+
+
+                        <!-- NEW PASSWORD -->
+
+                        <div>
+
+                            <label>
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="newPassword"
+                                placeholder="Enter new password"
+                                required>
+
+                        </div>
+
+
+                        <!-- CONFIRM PASSWORD -->
+
+                        <div>
+
+                            <label>
+                                Confirm New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm new password"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="submit"
+                            class="save-btn">
+
+                            💾 Save Account Changes
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =================================================
+     JAVASCRIPT
+================================================= -->
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

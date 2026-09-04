@@ -1,0 +1,586 @@
+/* =====================================
+   SVN ELECTRICAL WORKS
+   EMPLOYEE MANAGEMENT DASHBOARD
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* =====================================
+   DASHBOARD LAYOUT
+===================================== */
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =====================================
+   SIDEBAR
+===================================== */
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    padding: 25px 15px;
+
+    background: linear-gradient(
+        180deg,
+        #0f172a,
+        #1e3a8a,
+        #2563eb
+    );
+
+    box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+}
+
+.sidebar h2 {
+    color: white;
+    text-align: center;
+    font-size: 23px;
+    line-height: 1.3;
+    margin-bottom: 35px;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: rgba(255,255,255,0.10);
+    color: white;
+
+    font-size: 15px;
+    text-align: left;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar button:hover {
+    background: white;
+    color: #1e3a8a;
+    transform: translateX(5px);
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+
+.main-content {
+    flex: 1;
+    padding: 25px;
+    overflow-x: auto;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: white;
+    padding: 20px 25px;
+
+    border-radius: 15px;
+    margin-bottom: 25px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+header h1 {
+    color: #1e3a8a;
+    font-size: 28px;
+}
+
+header span {
+    color: #64748b;
+    font-weight: bold;
+}
+
+/* =====================================
+   SECTIONS
+===================================== */
+
+.section {
+    animation: fadeIn 0.3s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* =====================================
+   DASHBOARD CARDS
+===================================== */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+
+    border-top: 5px solid #2563eb;
+
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.card:nth-child(1) {
+    border-top-color: #2563eb;
+}
+
+.card:nth-child(2) {
+    border-top-color: #16a34a;
+}
+
+.card:nth-child(3) {
+    border-top-color: #f59e0b;
+}
+
+.card:nth-child(4) {
+    border-top-color: #9333ea;
+}
+
+.card h3 {
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.card p {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+/* =====================================
+   SECTION HEADER
+===================================== */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    color: #1e3a8a;
+}
+
+/* =====================================
+   ADD BUTTON
+===================================== */
+
+.add-btn {
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    color: white;
+
+    border: none;
+    padding: 12px 20px;
+
+    border-radius: 9px;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    transform: scale(1.05);
+}
+
+/* =====================================
+   EMPLOYEE FORM
+===================================== */
+
+.employee-form {
+    background: white;
+
+    padding: 25px;
+    margin-bottom: 25px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.employee-form h2 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+.form-grid label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+    color: #475569;
+}
+
+.form-grid input,
+.form-grid select {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+/* =====================================
+   FORM BUTTONS
+===================================== */
+
+.form-buttons {
+    margin-top: 20px;
+
+    display: flex;
+    gap: 10px;
+}
+
+.save-btn {
+    background: #16a34a;
+
+    color: white;
+
+    border: none;
+
+    padding: 11px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.cancel-btn {
+    background: #64748b;
+
+    color: white;
+
+    border: none;
+
+    padding: 11px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.save-btn:hover {
+    background: #15803d;
+}
+
+.cancel-btn:hover {
+    background: #475569;
+}
+
+/* =====================================
+   TABLE
+===================================== */
+
+.table-container {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    overflow-x: auto;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+th {
+    background: #1e3a8a;
+
+    color: white;
+
+    padding: 13px;
+
+    text-align: left;
+}
+
+td {
+    padding: 13px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+/* =====================================
+   DELETE BUTTON
+===================================== */
+
+.delete-btn {
+    background: #dc2626;
+
+    color: white;
+
+    border: none;
+
+    padding: 7px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+
+/* =====================================
+   ATTENDANCE
+===================================== */
+
+.attendance-summary {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+.attendance-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.attendance-card:nth-child(1) {
+    border-top: 5px solid #16a34a;
+}
+
+.attendance-card:nth-child(2) {
+    border-top: 5px solid #dc2626;
+}
+
+.attendance-card:nth-child(3) {
+    border-top: 5px solid #f59e0b;
+}
+
+.attendance-card h3 {
+    color: #64748b;
+
+    margin-bottom: 10px;
+}
+
+.attendance-card p {
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #1e293b;
+}
+
+/* =====================================
+   ATTENDANCE BUTTONS
+===================================== */
+
+.attendance-btn {
+    border: none;
+
+    padding: 7px 11px;
+
+    margin: 2px;
+
+    border-radius: 6px;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.attendance-btn.present {
+    background: #16a34a;
+}
+
+.attendance-btn.absent {
+    background: #dc2626;
+}
+
+.attendance-btn.late {
+    background: #f59e0b;
+}
+
+.attendance-btn:hover {
+    opacity: 0.85;
+}
+
+.status {
+    margin-left: 8px;
+
+    font-weight: bold;
+
+    color: #334155;
+}
+
+/* =====================================
+   INFO BOX
+===================================== */
+
+.info-box {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+
+    margin-top: 20px;
+}
+
+.info-box strong {
+    color: #2563eb;
+    font-size: 20px;
+}
+
+/* =====================================
+   MOBILE RESPONSIVE
+===================================== */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .sidebar button {
+        display: inline-block;
+        width: auto;
+        margin-right: 5px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-summary {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+}
