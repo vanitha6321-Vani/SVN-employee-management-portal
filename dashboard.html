@@ -1,37 +1,148 @@
-<script>
-const video = document.getElementById('video');
-const statusText = document.getElementById('status');
-const logText = document.getElementById('logText');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVN Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dashboard">
+  <div class="sidebar">
+    <h2>SVN<br>ELECTRICAL WORKS</h2>
+    <button onclick="showSection('dashboard')">📊 Dashboard</button>
+    <button onclick="showSection('employees')">👷 Employees</button>
+    <button onclick="showSection('attendance')">📅 Attendance</button>
+    <button onclick="showSection('leave')">🌴 Leave</button>
+    <button onclick="showSection('salary')">💰 Salary</button>
+    <button onclick="showSection('reports')">📄 Reports</button>
+    <button onclick="logout()" style="margin-top:20px;background:rgba(255,0,0,0.3);">🚪 Logout</button>
+  </div>
 
-async function startCamera(){
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({video: true});
-    video.srcObject = stream;
-    statusText.innerText = "✅ Camera Ready - Face center lo pettu";
-  } catch(e){
-    statusText.innerText = "❌ Camera Allow cheyaledu - Allow ivvu";
-  }
-}
-startCamera();
+  <div class="main-content">
+    <header>
+      <h1 id="pageTitle">Dashboard</h1>
+      <span id="currentDate"></span>
+    </header>
 
-// Simple Face Check - No heavy model needed for GitHub Pages
-document.getElementById('captureBtn').onclick = () => {
-  // Video lo image unda leda check
-  if(video.srcObject && video.readyState === 4){
-    const now = new Date();
-    const timeString = now.toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'});
-    statusText.innerText = "✅ Attendance Marked: " + timeString;
-    logText.innerText = "Present Today: " + timeString;
-    document.getElementById('attendanceLog').innerHTML = `<p style="color:green; font-weight:bold;">✅ Present - ${timeString}</p>`;
-    localStorage.setItem('attendance_' + now.toDateString(), timeString);
-    alert("Attendance Success Vanitha! ✅ Time: " + timeString);
-  } else {
-    statusText.innerText = "❌ Camera ready kaaledu, 2 sec aagi malli nokku";
-    startCamera();
-  }
-};
+    <!-- DASHBOARD SECTION -->
+    <div id="dashboard" class="section">
+      <div class="cards">
+        <div class="card"><h3>Total Employees</h3><p id="totalEmployees">0</p></div>
+        <div class="card"><h3>Present Today</h3><p id="dashboardPresent">0</p></div>
+        <div class="card"><h3>On Leave</h3><p id="dashboardLeave">0</p></div>
+        <div class="card"><h3>Departments</h3><p id="totalDepartments">0</p></div>
+      </div>
+      <div class="info-box" style="margin-top:25px;">
+        <h3>Welcome Vanitha! 👋</h3>
+        <p>Facial Attendance System Ready. Go to Attendance -> Click 📸 Face</p>
+      </div>
+    </div>
 
-// Old log chupinchu
-const saved = localStorage.getItem('attendance_' + new Date().toDateString());
-if(saved){ logText.innerText = "Present Today: " + saved; }
-</script>
+    <!-- EMPLOYEES SECTION -->
+    <div id="employees" class="section hidden">
+      <div class="section-header"><h2>Employees</h2><button class="add-btn" onclick="openEmployeeForm()">+ Add Employee</button></div>
+      <div id="employeeForm" class="employee-form hidden">
+        <h2>Add Employee</h2>
+        <form id="addEmployeeForm">
+          <div class="form-grid">
+            <div><label>Employee ID</label><input type="text" id="employeeId" required></div>
+            <div><label>Name</label><input type="text" id="employeeName" required></div>
+            <div><label>Email</label><input type="email" id="employeeEmail"></div>
+            <div><label>Phone</label><input type="text" id="employeePhone" required></div>
+            <div><label>Department</label><select id="employeeDepartment"><option>Electrical</option><option>Maintenance</option><option>Admin</option><option>Site Work</option></select></div>
+            <div><label>Designation</label><input type="text" id="employeeDesignation" required></div>
+            <div><label>Joining Date</label><input type="date" id="joiningDate" required></div>
+            <div><label>Salary</label><input type="number" id="employeeSalary" required></div>
+          </div>
+          <div class="form-buttons"><button type="submit" class="save-btn">Save</button><button type="button" class="cancel-btn" onclick="closeEmployeeForm()">Cancel</button></div>
+        </form>
+      </div>
+      <div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Designation</th><th>Phone</th><th>Salary</th><th>Action</th></tr></thead><tbody id="employeeTableBody"></tbody></table></div>
+    </div>
+
+    <!-- ATTENDANCE SECTION -->
+    <div id="attendance" class="section hidden">
+      <div class="section-header"><h2>Attendance</h2><span id="attendanceDate"></span></div>
+      <div class="attendance-summary">
+        <div class="attendance-card"><h3>Present</h3><p id="presentCount">0</p></div>
+        <div class="attendance-card"><h3>Absent</h3><p id="absentCount">0</p></div>
+        <div class="attendance-card"><h3>Late</h3><p id="lateCount">0</p></div>
+      </div>
+      <div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Action & Status</th></tr></thead><tbody id="attendanceTableBody"></tbody></table></div>
+    </div>
+
+    <!-- LEAVE SECTION -->
+    <div id="leave" class="section hidden">
+      <div class="section-header"><h2>Leave Management</h2><button class="add-btn" onclick="openLeaveForm()">+ Add Leave</button></div>
+      <div id="leaveForm" class="employee-form hidden">
+        <h2>Add Leave</h2>
+        <form id="addLeaveForm">
+          <div class="form-grid">
+            <div><label>Employee</label><select id="leaveEmployee" required></select></div>
+            <div><label>Leave Type</label><select id="leaveType"><option>Sick Leave</option><option>Casual Leave</option><option>Annual Leave</option></select></div>
+            <div><label>From</label><input type="date" id="leaveFrom" required></div>
+            <div><label>To</label><input type="date" id="leaveTo" required></div>
+          </div>
+          <div style="margin-top:15px;"><label>Reason</label><input type="text" id="leaveReason" style="width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;"></div>
+          <div class="form-buttons"><button type="submit" class="save-btn">Submit</button><button type="button" class="cancel-btn" onclick="closeLeaveForm()">Cancel</button></div>
+        </form>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px;">
+        <div class="attendance-card"><h3>Pending</h3><p id="pendingLeave">0</p></div>
+        <div class="attendance-card"><h3>Approved</h3><p id="approvedLeave">0</p></div>
+        <div class="attendance-card"><h3>Rejected</h3><p id="rejectedLeave">0</p></div>
+      </div>
+      <div class="table-container"><table><thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaveTableBody"></tbody></table></div>
+    </div>
+
+    <!-- SALARY SECTION -->
+    <div id="salary" class="section hidden">
+      <div class="section-header"><h2>Salary Management</h2><button class="add-btn" onclick="openSalaryForm()">+ Add Salary</button></div>
+      <div id="salaryForm" class="employee-form hidden">
+        <h2>Add Salary</h2>
+        <form id="addSalaryForm">
+          <div class="form-grid">
+            <div><label>Employee</label><select id="salaryEmployee" required></select></div>
+            <div><label>Month</label><input type="month" id="salaryMonth" required></div>
+            <div><label>Basic Salary</label><input type="number" id="basicSalary" required></div>
+            <div><label>Allowances</label><input type="number" id="allowances" value="0"></div>
+            <div><label>Deductions</label><input type="number" id="deductions" value="0"></div>
+          </div>
+          <div class="form-buttons"><button type="submit" class="save-btn">Save</button><button type="button" class="cancel-btn" onclick="closeSalaryForm()">Cancel</button></div>
+        </form>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px;">
+        <div class="attendance-card"><h3>Paid</h3><p id="employeesPaid">0</p></div>
+        <div class="attendance-card"><h3>Total Salary</h3><p id="totalSalary">₹0</p></div>
+        <div class="attendance-card"><h3>Allowances</h3><p id="totalAllowances">₹0</p></div>
+        <div class="attendance-card"><h3>Deductions</h3><p id="totalDeductions">₹0</p></div>
+      </div>
+      <div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Month</th><th>Basic</th><th>Allow</th><th>Deduct</th><th>Net</th><th>Action</th></tr></thead><tbody id="salaryTableBody"></tbody></table></div>
+    </div>
+
+    <!-- REPORTS SECTION -->
+    <div id="reports" class="section hidden">
+      <div class="section-header"><h2>Reports</h2></div>
+      <div class="cards">
+        <div class="card"><h3>Employees</h3><p id="reportEmployees">0</p></div>
+        <div class="card"><h3>Present</h3><p id="reportPresent">0</p></div>
+        <div class="card"><h3>Leaves</h3><p id="reportLeaves">0</p></div>
+        <div class="card"><h3>Salary Total</h3><p id="reportSalary">₹0</p></div>
+      </div>
+      <div style="margin:20px 0; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="add-btn" onclick="generateEmployeeReport()">Employee Report</button>
+        <button class="add-btn" onclick="generateAttendanceReport()">Attendance Report</button>
+        <button class="add-btn" onclick="generateLeaveReport()">Leave Report</button>
+        <button class="add-btn" onclick="generateSalaryReport()">Salary Report</button>
+        <button class="save-btn" onclick="printReport()">🖨️ Print</button>
+      </div>
+      <div id="reportOutput" class="table-container"><p style="text-align:center;color:#888;">Select a report above</p></div>
+    </div>
+
+  </div>
+</div>
+<script src="script.js"></script>
+<script>document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>
