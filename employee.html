@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Employee Facial Attendance</title><link rel="stylesheet" href="style.css">
+<style>.employee-page{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#2563eb,#1e3a8a);padding:20px}.employee-card{background:white;padding:40px;border-radius:20px;width:420px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3)}.employee-card video{width:100%;border-radius:15px;background:black;border:3px solid #2563eb;margin:20px 0}.employee-card input{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;margin:10px 0;font-size:16px}.success-msg{color:#16a34a;font-weight:bold;margin:15px 0;font-size:18px}</style>
+</head><body>
+<div class="employee-page"><div class="employee-card">
+<h2 style="color:#1e3a8a;">SVN ELECTRICAL</h2><h3>👷 Facial Attendance</h3>
+<input type="text" id="empIdInput" placeholder="Your ID Ex: SVN001">
+<video id="employeeVideo" width="320" height="240" autoplay muted playsinline></video>
+<p id="empStatus" style="font-weight:bold;">Enter ID & Start Camera</p>
+<div><button class="facial-btn capture" onclick="startEmployeeCamera()" style="background:#2563eb;">📷 Start Camera</button><button class="facial-btn capture" onclick="markEmployeeFacialAttendance()" style="background:#16a34a;">✅ Mark Attendance</button></div>
+<div id="empSuccess" class="success-msg"></div>
+<p style="margin-top:20px;"><a href="index.html">Admin Login →</a></p>
+</div></div>
+<script>
+let empStream=null;
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+let attendance=JSON.parse(localStorage.getItem("attendance"))||{};
+async function startEmployeeCamera(){
+  const id=document.getElementById('empIdInput').value.trim();
+  if(!id){alert("Enter ID");return;}
+  const emp=employees.find(e=>e.id===id);
+  if(!emp){alert("ID Not Found! Admin dashboard lo employee add cheyyi");return;}
+  try{empStream=await navigator.mediaDevices.getUserMedia({video:true});document.getElementById('employeeVideo').srcObject=empStream;document.getElementById('empStatus').innerText="✅ Ready - "+emp.name;}catch(e){document.getElementById('empStatus').innerText="❌ Camera Blocked";}
+}
+function markEmployeeFacialAttendance(){
+  const id=document.getElementById('empIdInput').value.trim();
+  const video=document.getElementById('employeeVideo');
+  if(!id||!video.srcObject){alert("First Enter ID & Start Camera");return;}
+  const emp=employees.find(e=>e.id===id); if(!emp){alert("ID Not Found");return;}
+  const today=new Date().toISOString().split("T")[0]; if(!attendance[today]) attendance[today]={};
+  attendance[today][id]="Present"; localStorage.setItem("attendance",JSON.stringify(attendance));
+  document.getElementById('empSuccess').innerHTML=`✅ Present Marked!<br>${emp.name} (${id})<br>${new Date().toLocaleTimeString()}`;
+  setTimeout(()=>{if(empStream){empStream.getTracks().forEach(t=>t.stop());}},1500);
+}
+</script></body></html>
