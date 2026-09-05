@@ -1,35 +1,111 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Employee Facial Attendance</title><link rel="stylesheet" href="style.css">
-<style>.employee-page{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#2563eb,#1e3a8a);padding:20px}.employee-card{background:white;padding:40px;border-radius:20px;width:420px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3)}.employee-card video{width:100%;border-radius:15px;background:black;border:3px solid #2563eb;margin:20px 0}.employee-card input{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;margin:10px 0;font-size:16px}.success-msg{color:#16a34a;font-weight:bold;margin:15px 0;font-size:18px}</style>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Employee Portal - SVN</title><link rel="stylesheet" href="style.css">
+<style>
+.employee-page{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#2563eb,#1e3a8a);padding:20px}
+.employee-card{background:white;padding:30px;border-radius:20px;width:460px;box-shadow:0 20px 50px rgba(0,0,0,0.3)}
+.tab-btn{width:50%;padding:12px;border:none;cursor:pointer;font-weight:bold;border-radius:10px 10px 0 0}
+.tab-btn.active{background:#2563eb;color:white}.tab-btn.inactive{background:#e2e8f0;color:#333}
+.tab-content{display:none;padding-top:15px}.tab-content.active{display:block}
+.employee-card video{width:100%;border-radius:15px;background:black;border:3px solid #2563eb;margin:15px 0}
+.employee-card input,.employee-card select{width:100%;padding:11px;border:2px solid #cbd5e1;border-radius:10px;margin:8px 0;font-size:14px}
+.success-msg{color:#16a34a;font-weight:bold;margin:10px 0;text-align:center}
+.facial-btn{padding:11px 18px;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer;margin:5px}
+</style>
 </head><body>
 <div class="employee-page"><div class="employee-card">
-<h2 style="color:#1e3a8a;">SVN ELECTRICAL</h2><h3>👷 Facial Attendance</h3>
+<h2 style="color:#1e3a8a;text-align:center;">SVN ELECTRICAL</h2>
+<h3 style="text-align:center;margin-bottom:15px;">👷 Employee Portal</h3>
+
+<div style="display:flex;">
+<button id="attTabBtn" class="tab-btn active" onclick="showEmpTab('attendance')">📸 Attendance</button>
+<button id="leaveTabBtn" class="tab-btn inactive" onclick="showEmpTab('leave')">🌴 Leave Apply</button>
+</div>
+
+<!-- ATTENDANCE TAB -->
+<div id="empAttendance" class="tab-content active">
 <input type="text" id="empIdInput" placeholder="Your ID Ex: SVN001">
 <video id="employeeVideo" width="320" height="240" autoplay muted playsinline></video>
-<p id="empStatus" style="font-weight:bold;">Enter ID & Start Camera</p>
-<div><button class="facial-btn capture" onclick="startEmployeeCamera()" style="background:#2563eb;">📷 Start Camera</button><button class="facial-btn capture" onclick="markEmployeeFacialAttendance()" style="background:#16a34a;">✅ Mark Attendance</button></div>
+<p id="empStatus" style="font-weight:bold;text-align:center;">Enter ID & Start Camera</p>
+<div style="text-align:center;">
+<button class="facial-btn" style="background:#2563eb;" onclick="startEmployeeCamera()">📷 Start Camera</button>
+<button class="facial-btn" style="background:#16a34a;" onclick="markEmployeeFacialAttendance()">✅ Mark Present</button>
+</div>
 <div id="empSuccess" class="success-msg"></div>
-<p style="margin-top:20px;"><a href="index.html">Admin Login →</a></p>
+</div>
+
+<!-- LEAVE TAB - BEFORE LOGIN -->
+<div id="empLeave" class="tab-content">
+<h4 style="text-align:center;color:#2563eb;">Apply Leave (No Login Needed)</h4>
+<input type="text" id="leaveEmpId" placeholder="Your Employee ID">
+<select id="leaveType"><option>Sick Leave</option><option>Casual Leave</option><option>Annual Leave</option><option>Emergency Leave</option></select>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+<div><label style="font-size:12px;">From Date</label><input type="date" id="leaveFrom"></div>
+<div><label style="font-size:12px;">To Date</label><input type="date" id="leaveTo"></div>
+</div>
+<input type="text" id="leaveReason" placeholder="Reason for Leave">
+<button class="facial-btn" style="background:#f59e0b;width:100%;margin-top:10px;" onclick="applyLeaveBeforeLogin()">📨 Submit Leave Request</button>
+<div id="leaveSuccess" class="success-msg"></div>
+</div>
+
+<p style="margin-top:20px;text-align:center;"><a href="index.html" style="color:#2563eb;font-weight:bold;">Admin Login →</a></p>
 </div></div>
+
 <script>
 let empStream=null;
 let employees=JSON.parse(localStorage.getItem("employees"))||[];
 let attendance=JSON.parse(localStorage.getItem("attendance"))||{};
+let leaves=JSON.parse(localStorage.getItem("leaves"))||[];
+
+function showEmpTab(tab){
+  document.getElementById('empAttendance').classList.remove('active');
+  document.getElementById('empLeave').classList.remove('active');
+  document.getElementById('attTabBtn').classList.remove('active'); document.getElementById('attTabBtn').classList.add('inactive');
+  document.getElementById('leaveTabBtn').classList.remove('active'); document.getElementById('leaveTabBtn').classList.add('inactive');
+  if(tab==='attendance'){
+    document.getElementById('empAttendance').classList.add('active');
+    document.getElementById('attTabBtn').classList.add('active');
+  } else {
+    document.getElementById('empLeave').classList.add('active');
+    document.getElementById('leaveTabBtn').classList.add('active');
+  }
+}
+
 async function startEmployeeCamera(){
   const id=document.getElementById('empIdInput').value.trim();
   if(!id){alert("Enter ID");return;}
+  employees=JSON.parse(localStorage.getItem("employees"))||[];
   const emp=employees.find(e=>e.id===id);
-  if(!emp){alert("ID Not Found! Admin dashboard lo employee add cheyyi");return;}
+  if(!emp){alert("ID Not Found! Admin dashboard lo add cheyyi");return;}
   try{empStream=await navigator.mediaDevices.getUserMedia({video:true});document.getElementById('employeeVideo').srcObject=empStream;document.getElementById('empStatus').innerText="✅ Ready - "+emp.name;}catch(e){document.getElementById('empStatus').innerText="❌ Camera Blocked";}
 }
 function markEmployeeFacialAttendance(){
   const id=document.getElementById('empIdInput').value.trim();
   const video=document.getElementById('employeeVideo');
   if(!id||!video.srcObject){alert("First Enter ID & Start Camera");return;}
+  employees=JSON.parse(localStorage.getItem("employees"))||[];
   const emp=employees.find(e=>e.id===id); if(!emp){alert("ID Not Found");return;}
+  attendance=JSON.parse(localStorage.getItem("attendance"))||{};
   const today=new Date().toISOString().split("T")[0]; if(!attendance[today]) attendance[today]={};
   attendance[today][id]="Present"; localStorage.setItem("attendance",JSON.stringify(attendance));
   document.getElementById('empSuccess').innerHTML=`✅ Present Marked!<br>${emp.name} (${id})<br>${new Date().toLocaleTimeString()}`;
   setTimeout(()=>{if(empStream){empStream.getTracks().forEach(t=>t.stop());}},1500);
 }
-</script></body></html>
+function applyLeaveBeforeLogin(){
+  const empId=document.getElementById('leaveEmpId').value.trim();
+  const type=document.getElementById('leaveType').value;
+  const from=document.getElementById('leaveFrom').value;
+  const to=document.getElementById('leaveTo').value;
+  const reason=document.getElementById('leaveReason').value.trim();
+  if(!empId||!from||!to||!reason){alert("Fill all fields");return;}
+  if(to<from){alert("To Date cannot be before From");return;}
+  employees=JSON.parse(localStorage.getItem("employees"))||[];
+  const emp=employees.find(e=>e.id===empId);
+  if(!emp){alert("Employee ID Not Found!");return;}
+  leaves=JSON.parse(localStorage.getItem("leaves"))||[];
+  const leave={id:Date.now(),employeeId:emp.id,employeeName:emp.name,leaveType:type,from:from,to:to,reason:reason,status:"Pending"};
+  leaves.push(leave); localStorage.setItem("leaves",JSON.stringify(leaves));
+  document.getElementById('leaveSuccess').innerHTML=`✅ Leave Submitted!<br>${emp.name} - ${type}<br>Pending for Admin Approval`;
+  document.getElementById('leaveReason').value="";
+}
+</script>
+</body></html>
