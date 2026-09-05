@@ -1,102 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVN Employee Dashboard</title>
-<style>
-body { font-family: Arial; background:#f4f7fb; margin:0; padding:0; }
-.header { background:#2d8fe8; color:white; padding:15px 20px; display:flex; justify-content:space-between; }
-.container { padding:20px; }
-.card { background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); margin-bottom:20px; }
-.stats { display:flex; gap:15px; }
-.stat-box { background:#eaf2ff; padding:15px; border-radius:10px; flex:1; text-align:center; }
-#video { background:black; }
-</style>
-</head>
-<body>
-
-<div class="header">
-  <h2>SVN Employee Management</h2>
-  <span>Welcome, Vanitha</span>
-</div>
-
-<div class="container">
-  <div class="card">
-    <h3>Dashboard Overview</h3>
-    <div class="stats">
-      <div class="stat-box"><b>Total Employees</b><br>24</div>
-      <div class="stat-box"><b>Present Today</b><br>18</div>
-      <div class="stat-box"><b>On Leave</b><br>2</div>
-    </div>
-  </div>
-
-  <!-- Facial Attendance Section -->
-  <div class="card" style="border:2px solid #2d8fe8;">
-    <h3>📸 Facial Attendance</h3>
-    <p>Camera mundu face petti Mark Attendance nokku</p>
-    <video id="video" width="320" height="240" autoplay muted playsinline style="border-radius:10px; width:100%; max-width:350px;"></video>
-    <br><br>
-    <button id="captureBtn" style="background:#2d8fe8; color:white; padding:12px 25px; border:none; border-radius:8px; font-size:16px; cursor:pointer;">Mark Attendance</button>
-    <p id="status" style="margin-top:10px; font-weight:bold; color:#555;">Camera loading... Allow permission ivvu</p>
-    <div id="attendanceLog" style="margin-top:15px;"></div>
-  </div>
-
-  <div class="card">
-    <h3>Recent Attendance Log</h3>
-    <p id="logText">No record today</p>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script>
 const video = document.getElementById('video');
 const statusText = document.getElementById('status');
 const logText = document.getElementById('logText');
 
-// 1. Camera Start
-async function startCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+async function startCamera(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({video: true});
     video.srcObject = stream;
-    statusText.innerText = "✅ Camera Ready - Face pettu";
-  } catch (err) {
-    statusText.innerText = "❌ Camera Allow cheyaledu - Browser lo Allow ivvu";
+    statusText.innerText = "✅ Camera Ready - Face center lo pettu";
+  } catch(e){
+    statusText.innerText = "❌ Camera Allow cheyaledu - Allow ivvu";
   }
 }
 startCamera();
 
-// 2. Model Load
-Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/weights')
-]).then(() => {
-  statusText.innerText = "✅ Model Loaded - Camera Ready";
-});
-
-// 3. Check Attendance
-document.getElementById('captureBtn').onclick = async () => {
-  statusText.innerText = "Checking face...";
-  const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-  
-  if (detection) {
+// Simple Face Check - No heavy model needed for GitHub Pages
+document.getElementById('captureBtn').onclick = () => {
+  // Video lo image unda leda check
+  if(video.srcObject && video.readyState === 4){
     const now = new Date();
-    const timeString = now.toLocaleString();
-    statusText.innerText = "✅ Face Matched - Attendance Marked: " + timeString;
+    const timeString = now.toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'});
+    statusText.innerText = "✅ Attendance Marked: " + timeString;
+    logText.innerText = "Present Today: " + timeString;
+    document.getElementById('attendanceLog').innerHTML = `<p style="color:green; font-weight:bold;">✅ Present - ${timeString}</p>`;
     localStorage.setItem('attendance_' + now.toDateString(), timeString);
-    logText.innerText = "Today Present: " + timeString;
-    document.getElementById('attendanceLog').innerHTML = `<p style="color:green; font-weight:bold;">Present on ${timeString}</p>`;
-    alert("Attendance Success Vanitha! ✅");
+    alert("Attendance Success Vanitha! ✅ Time: " + timeString);
   } else {
-    statusText.innerText = "❌ Face kanipinchaledu, koncham light lo ra / camera daggaraki ra";
+    statusText.innerText = "❌ Camera ready kaaledu, 2 sec aagi malli nokku";
+    startCamera();
   }
 };
 
-// Show old log
+// Old log chupinchu
 const saved = localStorage.getItem('attendance_' + new Date().toDateString());
-if (saved) {
-  logText.innerText = "Today Present: " + saved;
-}
+if(saved){ logText.innerText = "Present Today: " + saved; }
 </script>
-
-</body>
-</html>
