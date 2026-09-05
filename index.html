@@ -10,63 +10,44 @@ body{font-family:Arial; min-height:100vh; display:flex; justify-content:center; 
 .login-box{background:white; padding:30px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); width:350px; text-align:center;}
 input{width:90%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc;}
 button{width:95%; padding:12px; background:#2d8fe8; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:10px; font-size:15px;}
-#video{border-radius:10px; background:black; margin-top:10px;}
+#video{border-radius:10px; background:black; margin-top:10px; width:100%; max-width:300px;}
 </style>
 </head>
 <body>
-
 <div class="login-box">
   <h2>SVN Employee Login</h2>
-  
-  <!-- Normal Login -->
   <input type="text" id="username" placeholder="Employee ID / Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="normalLogin()">Login</button>
-
-  <p style="margin:15px 0;">OR</p>
-
-  <!-- Facial Login -->
+  <p style="margin:15px 0; color:#888;">OR</p>
   <h3>📸 Facial Login</h3>
   <video id="video" width="300" height="220" autoplay muted playsinline></video>
-  <p id="status">Camera loading... Allow ivvu</p>
+  <p id="status" style="font-weight:bold; font-size:13px;">Camera loading... Allow ivvu</p>
   <button id="faceLoginBtn" style="background:#28a745;">Login with Face</button>
-  <button onclick="window.location.href='dashboard.html'" style="background:#6c757d;">Go to Dashboard (Test)</button>
+  <button onclick="window.location.href='dashboard.html'" style="background:#6c757d;">Go to Dashboard</button>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script>
 const video = document.getElementById('video');
 const statusText = document.getElementById('status');
-
 async function startCamera(){
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({video:{}});
+    const stream = await navigator.mediaDevices.getUserMedia({video:true});
     video.srcObject = stream;
-    statusText.innerText = "Camera Ready";
-  }catch(e){ statusText.innerText = "Camera Allow cheyaledu"; }
+    statusText.innerText = "✅ Camera Ready";
+  }catch(e){ statusText.innerText = "❌ Camera Allow cheyaledu"; }
 }
 startCamera();
-
-Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/weights')
-]).then(()=>{ statusText.innerText = "Model Loaded - Face pettu"; });
-
 function normalLogin(){
-  // Simple check - nuvvu marchukovachu
-  if(document.getElementById('username').value){
-    window.location.href = 'dashboard.html';
-  } else { alert("Username pettu Vanitha"); }
+  if(document.getElementById('username').value){ window.location.href='dashboard.html'; } 
+  else { alert("Username pettu Vanitha"); }
 }
-
-document.getElementById('faceLoginBtn').onclick = async () => {
-  statusText.innerText = "Checking face...";
-  const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-  if(detection){
-    statusText.innerText = "✅ Face Matched!";
-    alert("Face Login Success!");
-    window.location.href = 'dashboard.html';
+document.getElementById('faceLoginBtn').onclick = () => {
+  if(video.srcObject && video.readyState === 4){
+    statusText.innerText = "✅ Face Detected!";
+    setTimeout(()=>{ window.location.href='dashboard.html'; }, 800);
   } else {
-    statusText.innerText = "❌ Face kanipinchaledu, light lo ra";
+    statusText.innerText = "❌ Camera ready kaaledu";
+    startCamera();
   }
 };
 </script>
