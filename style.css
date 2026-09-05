@@ -584,3 +584,45 @@ tr:hover {
     }
 
 }
+/* =====================================
+   FACIAL ATTENDANCE - NEW
+===================================== */
+#facialModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.facial-box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+.facial-box video {
+    border-radius: 15px;
+    background: black;
+    width: 100%;
+    border: 3px solid #2563eb;
+    margin: 15px 0;
+}
+.facial-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 8px;
+}
+.facial-btn.capture { background: #16a34a; }
+.facial-btn.close { background: #dc2626; }
+.attendance-btn.face-btn {
+    background: #6f42c1 !important;
+}
