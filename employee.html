@@ -45,6 +45,15 @@
 <input type="text" id="leaveReason" placeholder="Reason for Leave">
 <button class="facial-btn" style="background:#f59e0b;width:100%;margin-top:10px;" onclick="applyLeaveBeforeLogin()">📨 Submit Leave Request</button>
 <div id="leaveSuccess" class="success-msg"></div>
+
+<hr style="margin:20px 0;">
+<h4 style="text-align:center;color:#16a34a;">📋 My Leave Status</h4>
+<div style="display:flex;gap:8px;">
+<input type="text" id="statusCheckId" placeholder="Enter ID to check status" style="flex:1;">
+<button class="facial-btn" style="background:#16a34a;" onclick="checkMyLeaveStatus()">Check</button>
+</div>
+<div id="myLeaveList" style="margin-top:10px;max-height:200px;overflow:auto;"></div>
+
 </div>
 
 <p style="margin-top:20px;text-align:center;"><a href="index.html" style="color:#2563eb;font-weight:bold;">Admin Login →</a></p>
@@ -106,6 +115,23 @@ function applyLeaveBeforeLogin(){
   leaves.push(leave); localStorage.setItem("leaves",JSON.stringify(leaves));
   document.getElementById('leaveSuccess').innerHTML=`✅ Leave Submitted!<br>${emp.name} - ${type}<br>Pending for Admin Approval`;
   document.getElementById('leaveReason').value="";
+  document.getElementById('statusCheckId').value=empId;
+  checkMyLeaveStatus();
+}
+function checkMyLeaveStatus(){
+  const id=document.getElementById('statusCheckId').value.trim();
+  if(!id){alert("Enter ID");return;}
+  leaves=JSON.parse(localStorage.getItem("leaves"))||[];
+  const myLeaves=leaves.filter(l=>l.employeeId===id).reverse();
+  const div=document.getElementById('myLeaveList');
+  if(myLeaves.length===0){div.innerHTML="<p style='text-align:center;color:gray;'>No leaves found</p>";return;}
+  let html="<table style='width:100%;font-size:13px;border-collapse:collapse;'><tr style='background:#f1f5f9;'><th style='padding:6px;'>Type</th><th style='padding:6px;'>Dates</th><th style='padding:6px;'>Status</th></tr>";
+  myLeaves.forEach(l=>{
+    let color=l.status==="Approved"?"#16a34a":l.status==="Rejected"?"#dc2626":"#f59e0b";
+    html+=`<tr style='border-bottom:1px solid #e2e8f0;'><td style='padding:6px;'>${l.leaveType}</td><td style='padding:6px;'>${l.from} to ${l.to}</td><td style='padding:6px;color:${color};font-weight:bold;'>${l.status}</td></tr>`;
+  });
+  html+="</table>";
+  div.innerHTML=html;
 }
 </script>
 </body></html>
