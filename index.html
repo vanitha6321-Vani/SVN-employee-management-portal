@@ -1,99 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SVN Electrical Works</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #0f172a, #2563eb);
-        }
-
-        .welcome-box {
-            background: white;
-            width: 90%;
-            max-width: 500px;
-            padding: 45px 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        }
-
-        .welcome-box h1 {
-            color: #1e3a8a;
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-
-        .welcome-box p {
-            color: #64748b;
-            font-size: 17px;
-            margin-bottom: 30px;
-        }
-
-        .start-btn {
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 14px 30px;
-            border-radius: 10px;
-            font-size: 17px;
-            cursor: pointer;
-        }
-
-        .start-btn:hover {
-            background: #1d4ed8;
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVN - Employee Login</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{font-family:Arial; min-height:100vh; display:flex; justify-content:center; align-items:center; background:#f0f4f8; margin:0;}
+.login-box{background:white; padding:30px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); width:350px; text-align:center;}
+input{width:90%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc;}
+button{width:95%; padding:12px; background:#2d8fe8; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:10px; font-size:15px;}
+#video{border-radius:10px; background:black; margin-top:10px;}
+</style>
 </head>
-
 <body>
 
-    <div class="welcome-box">
+<div class="login-box">
+  <h2>SVN Employee Login</h2>
+  
+  <!-- Normal Login -->
+  <input type="text" id="username" placeholder="Employee ID / Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="normalLogin()">Login</button>
 
-        <h1>WELCOME TO<br>SVN ELECTRICAL WORKS</h1>
+  <p style="margin:15px 0;">OR</p>
 
-        <p>
-            Employee Management System
-        </p>
+  <!-- Facial Login -->
+  <h3>📸 Facial Login</h3>
+  <video id="video" width="300" height="220" autoplay muted playsinline></video>
+  <p id="status">Camera loading... Allow ivvu</p>
+  <button id="faceLoginBtn" style="background:#28a745;">Login with Face</button>
+  <button onclick="window.location.href='dashboard.html'" style="background:#6c757d;">Go to Dashboard (Test)</button>
+</div>
 
-        <button
-            class="start-btn"
-            onclick="startApp()"
-        >
-            Get Started
-        </button>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script>
+const video = document.getElementById('video');
+const statusText = document.getElementById('status');
 
-    </div>
+async function startCamera(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({video:{}});
+    video.srcObject = stream;
+    statusText.innerText = "Camera Ready";
+  }catch(e){ statusText.innerText = "Camera Allow cheyaledu"; }
+}
+startCamera();
 
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/weights')
+]).then(()=>{ statusText.innerText = "Model Loaded - Face pettu"; });
 
-    <script>
+function normalLogin(){
+  // Simple check - nuvvu marchukovachu
+  if(document.getElementById('username').value){
+    window.location.href = 'dashboard.html';
+  } else { alert("Username pettu Vanitha"); }
+}
 
-        function startApp() {
-
-            window.location.href = "dashboard.html";
-
-        }
-
-    </script>
-
+document.getElementById('faceLoginBtn').onclick = async () => {
+  statusText.innerText = "Checking face...";
+  const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
+  if(detection){
+    statusText.innerText = "✅ Face Matched!";
+    alert("Face Login Success!");
+    window.location.href = 'dashboard.html';
+  } else {
+    statusText.innerText = "❌ Face kanipinchaledu, light lo ra";
+  }
+};
+</script>
 </body>
-
 </html>
